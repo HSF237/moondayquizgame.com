@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>International Moon Day Quiz</title>
+  <title>International Moon Day Quiz - 30 Questions</title>
   <style>
     @import url("https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Roboto:wght@400;700&display=swap");
 
@@ -205,6 +205,7 @@
       display: inline-block;
       font-family: "Orbitron", sans-serif;
       letter-spacing: 1px;
+      margin: 10px 8px 0 0;
     }
 
     .btn:focus-visible {
@@ -245,6 +246,7 @@
       margin-bottom: 35px;
       text-shadow: 0 0 8px #ecb800;
       font-weight: 600;
+      min-height: 3rem;
     }
 
     /* Decorative moon and stars */
@@ -422,14 +424,15 @@
   <section class="quiz-container" role="main" aria-live="polite" aria-atomic="true" aria-labelledby="quiz-header">
     <div id="quiz-header" class="question" tabindex="0"></div>
     <ul class="options" role="list"></ul>
-    <button class="btn" id="submit-btn" disabled aria-disabled="true" aria-label="Submit your answer">
-      Submit Answer
-    </button>
-    <button class="btn" id="next-btn" style="display:none;" aria-label="Next question">Next Question</button>
-
+    <div style="margin-top:10px;">
+      <button class="btn" id="submit-btn" disabled aria-disabled="true" aria-label="Submit your answer">
+        Submit Answer
+      </button>
+      <button class="btn" id="next-btn" style="display:none;" aria-label="Next question">Next Question</button>
+      <button class="btn" id="restart-btn" style="display:none;" aria-label="Restart quiz">Restart Quiz</button>
+    </div>
     <div class="score-section" style="display:none;" aria-live="polite"></div>
     <div class="summary-message" style="display:none;"></div>
-    <button class="btn" id="restart-btn" style="display:none;" aria-label="Restart quiz">Restart Quiz</button>
   </section>
 
   <!-- Decorative moon and stars -->
@@ -446,47 +449,47 @@
     (function () {
       "use strict";
 
+      // 30 questions with 4 options and explanation
       const quizData = [
-        {
-          question: "When is International Moon Day celebrated?",
-          options: ["July 20", "January 31", "December 21", "August 6"],
-          answerIndex: 1,
-          explanation: "International Moon Day is recognized on January 31, commemorating the first human moon landing."
-        },
-        {
-          question: "Who was the first person to walk on the Moon?",
-          options: ["Buzz Aldrin", "Yuri Gagarin", "Neil Armstrong", "Michael Collins"],
-          answerIndex: 2,
-          explanation: "Neil Armstrong became the first person to walk on the Moon on July 20, 1969."
-        },
-        {
-          question: "What space mission first landed humans on the Moon?",
-          options: ["Apollo 11", "Gemini 4", "Sputnik 1", "Skylab 2"],
-          answerIndex: 0,
-          explanation: "Apollo 11 was the first mission to land humans on the Moon."
-        },
-        {
-          question: "Which country was the first to send a spacecraft to orbit the Moon?",
-          options: ["USA", "Russia (USSR)", "China", "India"],
-          answerIndex: 1,
-          explanation: "The USSR was the first to orbit the Moon with Luna 10 in 1966."
-        },
-        {
-          question: "How long does it take for the Moon to orbit the Earth?",
-          options: ["24 hours", "7 days", "27.3 days", "365 days"],
-          answerIndex: 2,
-          explanation: "The Moon takes approximately 27.3 days to complete an orbit around Earth."
-        }
+        { question: "When is International Moon Day celebrated?", options: ["July 20", "January 31", "December 21", "August 6"], answerIndex: 1, explanation: "International Moon Day is recognized on January 31, commemorating the first human moon landing." },
+        { question: "Who was the first person to walk on the Moon?", options: ["Buzz Aldrin", "Yuri Gagarin", "Neil Armstrong", "Michael Collins"], answerIndex: 2, explanation: "Neil Armstrong became the first person to walk on the Moon on July 20, 1969." },
+        { question: "What space mission first landed humans on the Moon?", options: ["Apollo 11", "Gemini 4", "Sputnik 1", "Skylab 2"], answerIndex: 0, explanation: "Apollo 11 was the first mission to land humans on the Moon." },
+        { question: "Which country was the first to send a spacecraft to orbit the Moon?", options: ["USA", "Russia (USSR)", "China", "India"], answerIndex: 1, explanation: "The USSR was the first to orbit the Moon with Luna 10 in 1966." },
+        { question: "How long does it take for the Moon to orbit the Earth?", options: ["24 hours", "7 days", "27.3 days", "365 days"], answerIndex: 2, explanation: "The Moon takes approximately 27.3 days to complete an orbit around Earth." },
+        { question: "What is the Moon's gravitational pull compared to Earth's?", options: ["Same as Earth", "1/6 of Earth", "1/2 of Earth", "Twice Earth's"], answerIndex: 1, explanation: "The Moon's gravity is about 1/6th of Earth's gravity." },
+        { question: "What causes the phases of the Moon?", options: ["Earth's rotation", "Moon's shadow", "Moon's orbit around Earth", "Sun's brightness"], answerIndex: 2, explanation: "The Moon's phases are caused by its orbit around Earth, changing the visible illuminated portion." },
+        { question: "Which Apollo mission was the last to land on the Moon?", options: ["Apollo 13", "Apollo 17", "Apollo 15", "Apollo 12"], answerIndex: 1, explanation: "Apollo 17, in December 1972, was the last mission to land humans on the Moon." },
+        { question: "What are the dark plains on the Moon called?", options: ["Maria", "Craterites", "Lunar seas", "Mare Tranquillitatis"], answerIndex: 0, explanation: "The dark plains are called 'Maria', Latin for seas, formed by ancient volcanic activity." },
+        { question: "How many astronauts have walked on the Moon as of 2024?", options: ["6", "12", "18", "24"], answerIndex: 1, explanation: "Twelve astronauts have walked on the Moon during Apollo missions." },
+        { question: "What is the far side of the Moon often called?", options: ["Dark Side", "Hidden Side", "Back Side", "Far Side"], answerIndex: 3, explanation: "The 'Far Side' of the Moon is the hemisphere not visible from Earth." },
+        { question: "Which planet’s moon is the Earth's Moon?", options: ["Mars", "Earth", "Jupiter", "Saturn"], answerIndex: 1, explanation: "Earth's Moon is Earth's only natural satellite." },
+        { question: "What is the average distance from Earth to the Moon?", options: ["384,400 km", "150,000 km", "500,000 km", "1,000,000 km"], answerIndex: 0, explanation: "The Moon is about 384,400 kilometers away from Earth on average." },
+        { question: "What spacecraft was the first human-made object to reach the Moon?", options: ["Luna 2", "Apollo 8", "Surveyor 1", "Chandrayaan 1"], answerIndex: 0, explanation: "Luna 2, sent by the USSR in 1959, was the first to impact the Moon." },
+        { question: "Which Apollo mission first orbited the Moon without landing?", options: ["Apollo 8", "Apollo 10", "Apollo 7", "Apollo 11"], answerIndex: 0, explanation: "Apollo 8 was the first mission to orbit the Moon in December 1968." },
+        { question: "What material mainly composes the Moon's surface?", options: ["Basalt and Regolith", "Ice", "Water", "Sand"], answerIndex: 0, explanation: "The surface is mostly composed of regolith (dust & broken rock) and basalt (volcanic rock)." },
+        { question: "What is the largest crater on the Moon?", options: ["Tycho", "Copernicus", "South Pole–Aitken Basin", "Aristarchus"], answerIndex: 2, explanation: "South Pole–Aitken Basin is the largest and oldest known impact crater." },
+        { question: "How long is one lunar day (sunrise to sunrise on the Moon)?", options: ["24 hours", "7 days", "29.5 Earth days", "365 days"], answerIndex: 2, explanation: "One lunar day, or synodic period, lasts about 29.5 Earth days." },
+        { question: "Why does the Moon have no atmosphere?", options: ["Too cold", "No gravity", "Too small and weak gravity to hold one", "Sunlight burns it away"], answerIndex: 2, explanation: "The Moon's gravity is too weak to hold a significant atmosphere." },
+        { question: "What was the main purpose of the Apollo missions?", options: ["Satellite launches", "Orbit Mars", "Land humans on the Moon and return safely", "Space station construction"], answerIndex: 2, explanation: "The Apollo program aimed to land humans on the Moon and bring them home safely." },
+        { question: "Who was the second person to walk on the Moon?", options: ["Buzz Aldrin", "Neil Armstrong", "Pete Conrad", "Alan Bean"], answerIndex: 0, explanation: "Buzz Aldrin was the second man to walk on the Moon during Apollo 11." },
+        { question: "Which US state celebrated the Moon landing by naming a highway 'Apollo 11'?", options: ["Texas", "Florida", "California", "Nevada"], answerIndex: 0, explanation: "Texas celebrates with the Apollo 11 highway in honor of the moon landing." },
+        { question: "What is the name of NASA's current program planning to send humans back to the Moon?", options: ["Apollo", "Artemis", "Gemini", "Orion"], answerIndex: 1, explanation: "The Artemis program is NASA's effort to return humans to the Moon." },
+        { question: "Which country was the first to send a rover to the Moon’s far side?", options: ["USA", "Russia", "China", "India"], answerIndex: 2, explanation: "China's Chang'e 4 mission was first to land a rover on the Moon's far side." },
+        { question: "What do we call the effect where the same face of the Moon always points to Earth?", options: ["Synchronous rotation", "Tidal locking", "Eclipse", "Conjunction"], answerIndex: 1, explanation: "This is called tidal locking." },
+        { question: "Which scientist explained the tides due to the Moon's gravity?", options: ["Isaac Newton", "Albert Einstein", "Galileo Galilei", "Johannes Kepler"], answerIndex: 0, explanation: "Isaac Newton explained tides as a result of gravitational pull, including the Moon's." },
+        { question: "How often does a total lunar eclipse occur for a given location?", options: ["Every 6 months", "About every 2.5 years", "Once every decade", "Once every century"], answerIndex: 1, explanation: "Total lunar eclipses are visible from a given location approximately every 2.5 years." },
+        { question: "Which Apollo mission's landing site is called Tranquility Base?", options: ["Apollo 11", "Apollo 10", "Apollo 12", "Apollo 13"], answerIndex: 0, explanation: "Apollo 11's landing site on the Moon was named Tranquility Base." },
+        { question: "Which US president famously challenged NASA to send a man to the Moon?", options: ["John F. Kennedy", "Richard Nixon", "Dwight Eisenhower", "Lyndon B. Johnson"], answerIndex: 0, explanation: "President JFK set the goal to land a man on the Moon before the 1960s ended." },
+        { question: "What is the name of the lunar rover used in the last Apollo missions?", options: ["Lunar Rover Vehicle (LRV)", "Moon Buggy", "Moon Rover", "Apollo Rover"], answerIndex: 0, explanation: "The Lunar Rover Vehicle (LRV) was used in Apollo 15, 16, and 17." }
       ];
 
-      // Selectors
       const questionEl = document.querySelector(".question");
       const optionsEl = document.querySelector(".options");
       const submitBtn = document.getElementById("submit-btn");
       const nextBtn = document.getElementById("next-btn");
+      const restartBtn = document.getElementById("restart-btn");
       const scoreSection = document.querySelector(".score-section");
       const summaryMessage = document.querySelector(".summary-message");
-      const restartBtn = document.getElementById("restart-btn");
 
       let currentQuestion = 0;
       let score = 0;
@@ -495,7 +498,6 @@
 
       // Load question and options
       function loadQuestion() {
-        // Reset
         submitBtn.disabled = true;
         submitBtn.setAttribute("aria-disabled", "true");
 
@@ -507,14 +509,11 @@
         answered = false;
         selectedOptionIndex = null;
 
-        // Set question text
         const currentQ = quizData[currentQuestion];
         questionEl.textContent = `Q${currentQuestion + 1}. ${currentQ.question}`;
 
-        // Remove old options
         optionsEl.innerHTML = "";
 
-        // Generate options
         currentQ.options.forEach((option, idx) => {
           const li = document.createElement("li");
           li.textContent = option;
@@ -522,7 +521,6 @@
           li.setAttribute("role", "button");
           li.setAttribute("aria-pressed", "false");
 
-          // Indicate visible focus
           li.addEventListener("keydown", e => {
             if (e.key === "Enter" || e.key === " ") {
               e.preventDefault();
@@ -530,7 +528,6 @@
             }
           });
 
-          // Click to select option
           li.addEventListener("click", () => {
             if (!answered) selectOption(idx);
           });
@@ -538,14 +535,12 @@
           optionsEl.appendChild(li);
         });
 
-        // Focus on question for screen readers
         questionEl.focus();
       }
 
-      // Select option logic and styles
+      // Select option
       function selectOption(idx) {
         if (answered) return;
-
         selectedOptionIndex = idx;
 
         Array.from(optionsEl.children).forEach((li, i) => {
@@ -563,7 +558,7 @@
         submitBtn.setAttribute("aria-disabled", "false");
       }
 
-      // Submit answer and show feedback
+      // Submit answer
       function submitAnswer() {
         if (answered || selectedOptionIndex === null) return;
         answered = true;
@@ -571,12 +566,10 @@
         const currentQ = quizData[currentQuestion];
         const optionsLis = optionsEl.children;
 
-        // Disable all options from further clicks
         Array.from(optionsLis).forEach(li => li.style.cursor = "default");
 
-        // Mark correct and wrong answers visually
         for (let i = 0; i < optionsLis.length; i++) {
-          optionsLis[i].classList.remove("selected"); // remove selected highlight
+          optionsLis[i].classList.remove("selected");
 
           if (i === currentQ.answerIndex) {
             optionsLis[i].classList.add("correct");
@@ -586,26 +579,23 @@
             optionsLis[i].setAttribute("aria-label", optionsLis[i].textContent + ' is incorrect.');
           }
 
-          optionsLis[i].setAttribute('tabindex', '-1'); // prevent tabbing options after answered
+          optionsLis[i].setAttribute('tabindex', '-1');
         }
 
-        // Update score if correct
         if (selectedOptionIndex === currentQ.answerIndex) {
           score++;
         }
 
-        // Show explanation after answers
         summaryMessage.textContent = currentQ.explanation;
         summaryMessage.style.display = "block";
 
         submitBtn.style.display = "none";
         nextBtn.style.display = "inline-block";
 
-        // Remove focus from submit, move to Next question button
         nextBtn.focus();
       }
 
-      // Next question logic or show result
+      // Next question or finish
       function nextQuestion() {
         currentQuestion++;
 
@@ -617,7 +607,7 @@
         }
       }
 
-      // End quiz and show score summary
+      // Show result
       function showResult() {
         questionEl.textContent = "🎉 Quiz Complete! 🎉";
         optionsEl.innerHTML = "";
@@ -627,14 +617,13 @@
         scoreSection.style.display = "block";
         scoreSection.textContent = `Your Score: ${score} / ${quizData.length}`;
 
-        // Different messages based on score
         let msg = "";
-        const percentage = (score / quizData.length) * 100;
-        if (percentage === 100) {
+        const pct = (score / quizData.length) * 100;
+        if (pct === 100) {
           msg = "Outstanding! You are a Moon expert 🌕🚀";
-        } else if (percentage >= 70) {
+        } else if (pct >= 70) {
           msg = "Great job! You know your moon facts 🌔";
-        } else if (percentage >= 40) {
+        } else if (pct >= 40) {
           msg = "Nice effort! Keep exploring the cosmos 🌙";
         } else {
           msg = "Keep learning and reach for the stars! ✨";
@@ -647,7 +636,7 @@
         restartBtn.focus();
       }
 
-      // Restart quiz to beginning
+      // Restart quiz
       function restartQuiz() {
         currentQuestion = 0;
         score = 0;
@@ -660,33 +649,33 @@
         restartBtn.style.display = "none";
       }
 
-
       // Event listeners
       submitBtn.addEventListener("click", submitAnswer);
       nextBtn.addEventListener("click", nextQuestion);
       restartBtn.addEventListener("click", restartQuiz);
 
-      // Initialize
-      loadQuestion();
-
-      // Keyboard navigation for options: focus highlight through arrow keys
+      // Keyboard navigation for options
       optionsEl.addEventListener("keydown", e => {
         const focusableOptions = Array.from(optionsEl.querySelectorAll("li"));
         if (!focusableOptions.length) return;
 
-        let index = focusableOptions.findIndex(item => item === document.activeElement);
+        let idx = focusableOptions.findIndex(item => item === document.activeElement);
 
         if (e.key === "ArrowDown") {
           e.preventDefault();
-          let nextIndex = (index + 1) % focusableOptions.length;
-          focusableOptions[nextIndex].focus();
+          let nextIdx = (idx + 1) % focusableOptions.length;
+          focusableOptions[nextIdx].focus();
         }
         if (e.key === "ArrowUp") {
           e.preventDefault();
-          let nextIndex = (index - 1 + focusableOptions.length) % focusableOptions.length;
-          focusableOptions[nextIndex].focus();
+          let prevIdx = (idx - 1 + focusableOptions.length) % focusableOptions.length;
+          focusableOptions[prevIdx].focus();
         }
       });
+
+      // Initialize
+      loadQuestion();
+
     })();
   </script>
 </body>
