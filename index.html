@@ -109,12 +109,14 @@
     /* Question */
     .question {
       font-size: 1.5rem;
-      margin-bottom: 25px;
+      margin-bottom: 30px; /* increased margin for spacing */
       font-weight: 700;
       color: #ffe87f;
       text-shadow:
         0 0 5px #f9d423,
         0 0 10px #f9d423;
+      position: relative;
+      z-index: 10;
     }
 
     /* Options */
@@ -206,6 +208,8 @@
       font-family: "Orbitron", sans-serif;
       letter-spacing: 1px;
       margin: 10px 8px 0 0;
+      position: relative;
+      z-index: 10;
     }
 
     .btn:focus-visible {
@@ -238,32 +242,21 @@
         0 0 15px #fc7303;
       margin-bottom: 25px;
       user-select: text;
+      position: relative;
+      z-index: 10;
     }
 
-.summary-message {
-  font-size: 1.25rem;
-  color: #ffe87f; /* Bright yellow */
-  margin-top: 15px; /* Add margin at top for spacing */
-  margin-bottom: 25px; /* Keep bottom margin */
-  text-shadow: 0 0 8px #ecb800;
-  font-weight: 600;
-  min-height: 3rem;
-  /* Add ensure visibility */
-  z-index: 10;
-  position: relative;
-}
-    /* Also update the .question margin-bottom */
-.question {
-  font-size: 1.5rem;
-  margin-bottom: 30px; /* increase margin for spacing */
-  font-weight: 700;
-  color: #ffe87f;
-  text-shadow:
-    0 0 5px #f9d423,
-    0 0 10px #f9d423;
-  position: relative;
-  z-index: 10;
-}
+    .summary-message {
+      font-size: 1.25rem;
+      color: #ffe87f; /* Bright, visible yellow */
+      margin-top: 15px; /* Added top margin for spacing from options */
+      margin-bottom: 25px;
+      text-shadow: 0 0 8px #ecb800;
+      font-weight: 600;
+      min-height: 3rem;
+      position: relative;
+      z-index: 10;
+    }
 
     /* Decorative moon and stars */
     .stars {
@@ -429,6 +422,12 @@
         padding: 10px 24px;
         font-size: 1rem;
       }
+
+      .summary-message {
+        font-size: 1.1rem;
+        margin-top: 12px;
+        margin-bottom: 20px;
+      }
     }
   </style>
 </head>
@@ -465,7 +464,7 @@
     (function () {
       "use strict";
 
-      // 30 questions with 4 options and explanation
+      // 30 questions same as before
       const quizData = [
         { question: "When is International Moon Day celebrated?", options: ["July 20", "January 31", "December 21", "August 6"], answerIndex: 1, explanation: "International Moon Day is recognized on January 31, commemorating the first human moon landing." },
         { question: "Who was the first person to walk on the Moon?", options: ["Buzz Aldrin", "Yuri Gagarin", "Neil Armstrong", "Michael Collins"], answerIndex: 2, explanation: "Neil Armstrong became the first person to walk on the Moon on July 20, 1969." },
@@ -511,8 +510,9 @@
       let score = 0;
       let answered = false;
       let selectedOptionIndex = null;
+      // Flag to control showing answers on submit
+      const SHOW_ANSWER_AFTER_EACH = false;
 
-      // Load question and options
       function loadQuestion() {
         submitBtn.disabled = true;
         submitBtn.setAttribute("aria-disabled", "true");
@@ -554,7 +554,6 @@
         questionEl.focus();
       }
 
-      // Select option
       function selectOption(idx) {
         if (answered) return;
         selectedOptionIndex = idx;
@@ -574,7 +573,6 @@
         submitBtn.setAttribute("aria-disabled", "false");
       }
 
-      // Submit answer
       function submitAnswer() {
         if (answered || selectedOptionIndex === null) return;
         answered = true;
@@ -584,26 +582,32 @@
 
         Array.from(optionsLis).forEach(li => li.style.cursor = "default");
 
-        for (let i = 0; i < optionsLis.length; i++) {
-          optionsLis[i].classList.remove("selected");
+        if (SHOW_ANSWER_AFTER_EACH) {
+          // Mark correct and wrong for each answer
+          for (let i = 0; i < optionsLis.length; i++) {
+            optionsLis[i].classList.remove("selected");
 
-          if (i === currentQ.answerIndex) {
-            optionsLis[i].classList.add("correct");
-            optionsLis[i].setAttribute("aria-label", optionsLis[i].textContent + ' is the correct answer.');
-          } else if (i === selectedOptionIndex) {
-            optionsLis[i].classList.add("wrong");
-            optionsLis[i].setAttribute("aria-label", optionsLis[i].textContent + ' is incorrect.');
+            if (i === currentQ.answerIndex) {
+              optionsLis[i].classList.add("correct");
+              optionsLis[i].setAttribute("aria-label", optionsLis[i].textContent + ' is the correct answer.');
+            } else if (i === selectedOptionIndex) {
+              optionsLis[i].classList.add("wrong");
+              optionsLis[i].setAttribute("aria-label", optionsLis[i].textContent + ' is incorrect.');
+            }
+
+            optionsLis[i].setAttribute('tabindex', '-1');
           }
-
-          optionsLis[i].setAttribute('tabindex', '-1');
+          summaryMessage.textContent = currentQ.explanation;
+          summaryMessage.style.display = "block";
+        } else {
+          // If not showing answer after each question,
+          // do not show any explanation or mark correct/wrong options
+          summaryMessage.style.display = "none";
         }
 
         if (selectedOptionIndex === currentQ.answerIndex) {
           score++;
         }
-
-        summaryMessage.textContent = currentQ.explanation;
-        summaryMessage.style.display = "block";
 
         submitBtn.style.display = "none";
         nextBtn.style.display = "inline-block";
@@ -611,7 +615,6 @@
         nextBtn.focus();
       }
 
-      // Next question or finish
       function nextQuestion() {
         currentQuestion++;
 
@@ -623,7 +626,6 @@
         }
       }
 
-      // Show result
       function showResult() {
         questionEl.textContent = "🎉 Quiz Complete! 🎉";
         optionsEl.innerHTML = "";
@@ -652,7 +654,6 @@
         restartBtn.focus();
       }
 
-      // Restart quiz
       function restartQuiz() {
         currentQuestion = 0;
         score = 0;
@@ -665,12 +666,10 @@
         restartBtn.style.display = "none";
       }
 
-      // Event listeners
       submitBtn.addEventListener("click", submitAnswer);
       nextBtn.addEventListener("click", nextQuestion);
       restartBtn.addEventListener("click", restartQuiz);
 
-      // Keyboard navigation for options
       optionsEl.addEventListener("keydown", e => {
         const focusableOptions = Array.from(optionsEl.querySelectorAll("li"));
         if (!focusableOptions.length) return;
@@ -689,7 +688,6 @@
         }
       });
 
-      // Initialize
       loadQuestion();
 
     })();
