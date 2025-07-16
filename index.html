@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>International Moon Day Quiz</title>
+  <style>
+    @import url("https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Roboto:wght@400;700&display=swap");
+
+    /* Reset and base */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      user-select: none;
+    }
+
+    body {
+      font-family: "Roboto", sans-serif;
+      background: radial-gradient(circle at center, #0b1a2d, #000812);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      color: #f0f0f0;
+      overflow-x: hidden;
+      flex-direction: column;
+    }
+
+    h1 {
+      font-family: "Orbitron", sans-serif;
+      font-size: 3rem;
+      color: #f9d423;
+      text-shadow:
+        0 0 6px #f9d423,
+        0 0 10px #f9d423,
+        0 0 15px #fc7303,
+        0 0 20px #fc7303;
+      margin-bottom: 15px;
+      text-align: center;
+      letter-spacing: 2px;
+    }
+
+    .subtitle {
+      font-weight: 500;
+      font-size: 1.25rem;
+      margin-bottom: 40px;
+      color: #aeb8c1;
+      text-shadow: 0 0 3px #4a536b;
+      font-style: italic;
+      text-align: center;
+    }
+
+    /* Quiz container */
+    .quiz-container {
+      background: linear-gradient(145deg, #1e2a47, #14202b);
+      border-radius: 16px;
+      box-shadow:
+        inset 4px 4px 8px rgba(255 255 255 / 0.1),
+        inset -4px -4px 12px rgba(0 0 0 / 0.7),
+        0 4px 30px rgba(249, 212, 35, 0.6);
+      width: 100%;
+      max-width: 700px;
+      padding: 30px 40px 40px 40px;
+      position: relative;
+    }
+
+    /* Glowing border animation */
+    .quiz-container::before {
+      content: "";
+      position: absolute;
+      top: -5px;
+      bottom: -5px;
+      right: -5px;
+      left: -5px;
+      border-radius: 20px;
+      pointer-events: none;
+      background: linear-gradient(
+        270deg,
+        #ffaa00,
+        #fceb3d,
+        #ffaa00,
+        #fceb3d,
+        #ffaa00
+      );
+      background-size: 600% 600%;
+      animation: glowing 15s linear infinite;
+      z-index: 0;
+      filter: drop-shadow(0 0 8px #fceb3d);
+    }
+
+    @keyframes glowing {
+      0% {
+        background-position: 0% 50%;
+      }
+
+      50% {
+        background-position: 100% 50%;
+      }
+
+      100% {
+        background-position: 0% 50%;
+      }
+    }
+
+
+    /* Question */
+    .question {
+      font-size: 1.5rem;
+      margin-bottom: 25px;
+      font-weight: 700;
+      color: #ffe87f;
+      text-shadow:
+        0 0 5px #f9d423,
+        0 0 10px #f9d423;
+    }
+
+    /* Options */
+    .options {
+      list-style: none;
+      padding: 0;
+      margin-bottom: 20px;
+    }
+
+    .options li {
+      background: linear-gradient(145deg, #12192f, #1d2a50);
+      margin-bottom: 18px;
+      border-radius: 12px;
+      padding: 15px 20px;
+      font-size: 1.2rem;
+      cursor: pointer;
+      color: #cbd5e1;
+      box-shadow:
+        inset 2px 2px 4px rgba(255 255 255 / 0.1),
+        inset -2px -2px 6px rgba(0 0 0 / 0.6);
+      transition:
+        background 0.4s ease,
+        transform 0.25s ease,
+        color 0.3s ease,
+        box-shadow 0.4s ease;
+      display: flex;
+      align-items: center;
+      position: relative;
+      user-select: none;
+    }
+
+    .options li:hover,
+    .options li:focus-visible {
+      background: #f9d423;
+      color: #081930;
+      box-shadow:
+        0 0 12px #f9d423,
+        inset 0 0 10px #f9d423;
+      transform: scale(1.03);
+      outline: none;
+    }
+
+    .options li.selected {
+      background: #fc7303;
+      color: #080a12;
+      box-shadow:
+        0 0 15px #fc7303,
+        inset 0 0 12px #fc7303;
+      cursor: default;
+      transform: scale(1.05);
+    }
+
+    .options li.correct {
+      background: #00c853;
+      color: white;
+      box-shadow:
+        0 0 20px #00c853,
+        inset 0 0 14px #00c853;
+      cursor: default;
+      transform: scale(1.05);
+    }
+
+    .options li.wrong {
+      background: #d32f2f;
+      color: white;
+      box-shadow:
+        0 0 18px #d32f2f,
+        inset 0 0 12px #d32f2f;
+      cursor: default;
+      transform: scale(1.05);
+    }
+
+    /* Buttons */
+    .btn {
+      cursor: pointer;
+      padding: 12px 28px;
+      font-size: 1.1rem;
+      font-weight: 700;
+      border-radius: 32px;
+      border: none;
+      background: linear-gradient(145deg, #f9d423, #fc7303);
+      color: #081930;
+      box-shadow:
+        0 5px 10px rgba(252, 115, 3, 0.7),
+        inset 0 2px 4px rgba(255 255 255 / 0.4);
+      transition: background 0.3s ease, transform 0.2s ease;
+      user-select: none;
+      display: inline-block;
+      font-family: "Orbitron", sans-serif;
+      letter-spacing: 1px;
+    }
+
+    .btn:focus-visible {
+      outline: 3px solid #f9d423;
+      outline-offset: 3px;
+    }
+
+    .btn:hover:not(:disabled) {
+      background: linear-gradient(145deg, #fc7303, #f9d423);
+      transform: scale(1.05);
+    }
+
+    .btn:disabled {
+      background: #666a7f;
+      color: #2a2e3e;
+      cursor: not-allowed;
+      box-shadow: none;
+      transform: none;
+    }
+
+    /* Score and completion screen */
+    .score-section {
+      text-align: center;
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: #f9d423;
+      text-shadow:
+        0 0 6px #f9d423,
+        0 0 10px #f9d423,
+        0 0 15px #fc7303;
+      margin-bottom: 25px;
+      user-select: text;
+    }
+
+    .summary-message {
+      font-size: 1.25rem;
+      color: #ffe87f;
+      margin-bottom: 35px;
+      text-shadow: 0 0 8px #ecb800;
+      font-weight: 600;
+    }
+
+    /* Decorative moon and stars */
+    .stars {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: transparent;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .star {
+      position: absolute;
+      background: white;
+      border-radius: 50%;
+      opacity: 0.8;
+      animation: twinkle 3s infinite alternate;
+      filter: drop-shadow(0 0 2px white);
+    }
+
+    @keyframes twinkle {
+      from {
+        opacity: 0.8;
+      }
+
+      to {
+        opacity: 0.3;
+      }
+    }
+
+    /* Moon shape: glowing sphere */
+    .moon {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 120px;
+      height: 120px;
+      background: radial-gradient(circle at 30% 30%, #faf8ef, #aca898);
+      border-radius: 50%;
+      box-shadow:
+        0 0 25px 5px rgba(250, 248, 239, 0.6),
+        inset 6px 6px 8px rgba(255, 255, 255, 0.9),
+        inset -6px -6px 12px rgba(150, 140, 126, 0.8);
+      filter: drop-shadow(0 0 12px #fcfbf7);
+      animation: gentleOrbit 20s infinite linear;
+      z-index: -1;
+      user-select: none;
+    }
+
+    /* Craters on the moon */
+    .moon::before,
+    .moon::after {
+      content: "";
+      position: absolute;
+      border-radius: 50%;
+      background: radial-gradient(circle at center, #968e81, #645c50);
+      opacity: 0.7;
+    }
+
+    .moon::before {
+      width: 25px;
+      height: 25px;
+      top: 30px;
+      left: 35px;
+      box-shadow:
+        10px 20px 5px rgba(0, 0, 0, 0.15),
+        inset 3px 3px 5px rgba(255 255 255 / 0.2);
+    }
+
+    .moon::after {
+      width: 15px;
+      height: 15px;
+      top: 70px;
+      left: 75px;
+      box-shadow:
+        3px 4px 3px rgba(0, 0, 0, 0.2),
+        inset 2px 2px 3px rgba(255 255 255 / 0.25);
+      opacity: 0.6;
+    }
+
+    @keyframes gentleOrbit {
+      0% {
+        transform: translate(0, 0) rotate(0deg);
+      }
+
+      50% {
+        transform: translate(-15px, -10px) rotate(5deg);
+      }
+
+      100% {
+        transform: translate(0, 0) rotate(0deg);
+      }
+    }
+
+    /* Animation delays for stars for natural twinkle */
+    .star:nth-child(1) {
+      top: 25vh;
+      left: 10vw;
+      width: 3px;
+      height: 3px;
+      animation-delay: 0s;
+    }
+
+    .star:nth-child(2) {
+      top: 10vh;
+      left: 50vw;
+      width: 2px;
+      height: 2px;
+      animation-delay: 0.8s;
+    }
+
+    .star:nth-child(3) {
+      top: 70vh;
+      left: 80vw;
+      width: 2.5px;
+      height: 2.5px;
+      animation-delay: 1.3s;
+    }
+
+    .star:nth-child(4) {
+      top: 40vh;
+      left: 35vw;
+      width: 3.5px;
+      height: 3.5px;
+      animation-delay: 0.4s;
+    }
+
+    .star:nth-child(5) {
+      top: 80vh;
+      left: 20vw;
+      width: 2px;
+      height: 2px;
+      animation-delay: 1.7s;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 2.1rem;
+      }
+
+      .subtitle {
+        font-size: 1rem;
+        margin-bottom: 30px;
+      }
+
+      .quiz-container {
+        padding: 25px 20px 30px 20px;
+      }
+
+      .question {
+        font-size: 1.3rem;
+      }
+
+      .options li {
+        font-size: 1rem;
+        padding: 12px 16px;
+      }
+
+      .btn {
+        padding: 10px 24px;
+        font-size: 1rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <h1>🌕 International Moon Day Quiz 🌖</h1>
+  <p class="subtitle">Test your knowledge & celebrate the moon with us!</p>
+
+  <section class="quiz-container" role="main" aria-live="polite" aria-atomic="true" aria-labelledby="quiz-header">
+    <div id="quiz-header" class="question" tabindex="0"></div>
+    <ul class="options" role="list"></ul>
+    <button class="btn" id="submit-btn" disabled aria-disabled="true" aria-label="Submit your answer">
+      Submit Answer
+    </button>
+    <button class="btn" id="next-btn" style="display:none;" aria-label="Next question">Next Question</button>
+
+    <div class="score-section" style="display:none;" aria-live="polite"></div>
+    <div class="summary-message" style="display:none;"></div>
+    <button class="btn" id="restart-btn" style="display:none;" aria-label="Restart quiz">Restart Quiz</button>
+  </section>
+
+  <!-- Decorative moon and stars -->
+  <div class="stars" aria-hidden="true">
+    <span class="star"></span>
+    <span class="star"></span>
+    <span class="star"></span>
+    <span class="star"></span>
+    <span class="star"></span>
+  </div>
+  <div class="moon" aria-hidden="true"></div>
+
+  <script>
+    (function () {
+      "use strict";
+
+      const quizData = [
+        {
+          question: "When is International Moon Day celebrated?",
+          options: ["July 20", "January 31", "December 21", "August 6"],
+          answerIndex: 1,
+          explanation: "International Moon Day is recognized on January 31, commemorating the first human moon landing."
+        },
+        {
+          question: "Who was the first person to walk on the Moon?",
+          options: ["Buzz Aldrin", "Yuri Gagarin", "Neil Armstrong", "Michael Collins"],
+          answerIndex: 2,
+          explanation: "Neil Armstrong became the first person to walk on the Moon on July 20, 1969."
+        },
+        {
+          question: "What space mission first landed humans on the Moon?",
+          options: ["Apollo 11", "Gemini 4", "Sputnik 1", "Skylab 2"],
+          answerIndex: 0,
+          explanation: "Apollo 11 was the first mission to land humans on the Moon."
+        },
+        {
+          question: "Which country was the first to send a spacecraft to orbit the Moon?",
+          options: ["USA", "Russia (USSR)", "China", "India"],
+          answerIndex: 1,
+          explanation: "The USSR was the first to orbit the Moon with Luna 10 in 1966."
+        },
+        {
+          question: "How long does it take for the Moon to orbit the Earth?",
+          options: ["24 hours", "7 days", "27.3 days", "365 days"],
+          answerIndex: 2,
+          explanation: "The Moon takes approximately 27.3 days to complete an orbit around Earth."
+        }
+      ];
+
+      // Selectors
+      const questionEl = document.querySelector(".question");
+      const optionsEl = document.querySelector(".options");
+      const submitBtn = document.getElementById("submit-btn");
+      const nextBtn = document.getElementById("next-btn");
+      const scoreSection = document.querySelector(".score-section");
+      const summaryMessage = document.querySelector(".summary-message");
+      const restartBtn = document.getElementById("restart-btn");
+
+      let currentQuestion = 0;
+      let score = 0;
+      let answered = false;
+      let selectedOptionIndex = null;
+
+      // Load question and options
+      function loadQuestion() {
+        // Reset
+        submitBtn.disabled = true;
+        submitBtn.setAttribute("aria-disabled", "true");
+
+        nextBtn.style.display = "none";
+        summaryMessage.style.display = "none";
+        scoreSection.style.display = "none";
+        restartBtn.style.display = "none";
+
+        answered = false;
+        selectedOptionIndex = null;
+
+        // Set question text
+        const currentQ = quizData[currentQuestion];
+        questionEl.textContent = `Q${currentQuestion + 1}. ${currentQ.question}`;
+
+        // Remove old options
+        optionsEl.innerHTML = "";
+
+        // Generate options
+        currentQ.options.forEach((option, idx) => {
+          const li = document.createElement("li");
+          li.textContent = option;
+          li.setAttribute("tabindex", "0");
+          li.setAttribute("role", "button");
+          li.setAttribute("aria-pressed", "false");
+
+          // Indicate visible focus
+          li.addEventListener("keydown", e => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              selectOption(idx);
+            }
+          });
+
+          // Click to select option
+          li.addEventListener("click", () => {
+            if (!answered) selectOption(idx);
+          });
+
+          optionsEl.appendChild(li);
+        });
+
+        // Focus on question for screen readers
+        questionEl.focus();
+      }
+
+      // Select option logic and styles
+      function selectOption(idx) {
+        if (answered) return;
+
+        selectedOptionIndex = idx;
+
+        Array.from(optionsEl.children).forEach((li, i) => {
+          if (i === idx) {
+            li.classList.add("selected");
+            li.setAttribute("aria-pressed", "true");
+            li.focus();
+          } else {
+            li.classList.remove("selected");
+            li.setAttribute("aria-pressed", "false");
+          }
+        });
+
+        submitBtn.disabled = false;
+        submitBtn.setAttribute("aria-disabled", "false");
+      }
+
+      // Submit answer and show feedback
+      function submitAnswer() {
+        if (answered || selectedOptionIndex === null) return;
+        answered = true;
+
+        const currentQ = quizData[currentQuestion];
+        const optionsLis = optionsEl.children;
+
+        // Disable all options from further clicks
+        Array.from(optionsLis).forEach(li => li.style.cursor = "default");
+
+        // Mark correct and wrong answers visually
+        for (let i = 0; i < optionsLis.length; i++) {
+          optionsLis[i].classList.remove("selected"); // remove selected highlight
+
+          if (i === currentQ.answerIndex) {
+            optionsLis[i].classList.add("correct");
+            optionsLis[i].setAttribute("aria-label", optionsLis[i].textContent + ' is the correct answer.');
+          } else if (i === selectedOptionIndex) {
+            optionsLis[i].classList.add("wrong");
+            optionsLis[i].setAttribute("aria-label", optionsLis[i].textContent + ' is incorrect.');
+          }
+
+          optionsLis[i].setAttribute('tabindex', '-1'); // prevent tabbing options after answered
+        }
+
+        // Update score if correct
+        if (selectedOptionIndex === currentQ.answerIndex) {
+          score++;
+        }
+
+        // Show explanation after answers
+        summaryMessage.textContent = currentQ.explanation;
+        summaryMessage.style.display = "block";
+
+        submitBtn.style.display = "none";
+        nextBtn.style.display = "inline-block";
+
+        // Remove focus from submit, move to Next question button
+        nextBtn.focus();
+      }
+
+      // Next question logic or show result
+      function nextQuestion() {
+        currentQuestion++;
+
+        if (currentQuestion >= quizData.length) {
+          showResult();
+        } else {
+          loadQuestion();
+          submitBtn.style.display = "inline-block";
+        }
+      }
+
+      // End quiz and show score summary
+      function showResult() {
+        questionEl.textContent = "🎉 Quiz Complete! 🎉";
+        optionsEl.innerHTML = "";
+        submitBtn.style.display = "none";
+        nextBtn.style.display = "none";
+
+        scoreSection.style.display = "block";
+        scoreSection.textContent = `Your Score: ${score} / ${quizData.length}`;
+
+        // Different messages based on score
+        let msg = "";
+        const percentage = (score / quizData.length) * 100;
+        if (percentage === 100) {
+          msg = "Outstanding! You are a Moon expert 🌕🚀";
+        } else if (percentage >= 70) {
+          msg = "Great job! You know your moon facts 🌔";
+        } else if (percentage >= 40) {
+          msg = "Nice effort! Keep exploring the cosmos 🌙";
+        } else {
+          msg = "Keep learning and reach for the stars! ✨";
+        }
+
+        summaryMessage.textContent = msg;
+        summaryMessage.style.display = "block";
+
+        restartBtn.style.display = "inline-block";
+        restartBtn.focus();
+      }
+
+      // Restart quiz to beginning
+      function restartQuiz() {
+        currentQuestion = 0;
+        score = 0;
+        loadQuestion();
+
+        scoreSection.style.display = "none";
+        summaryMessage.style.display = "none";
+
+        submitBtn.style.display = "inline-block";
+        restartBtn.style.display = "none";
+      }
+
+
+      // Event listeners
+      submitBtn.addEventListener("click", submitAnswer);
+      nextBtn.addEventListener("click", nextQuestion);
+      restartBtn.addEventListener("click", restartQuiz);
+
+      // Initialize
+      loadQuestion();
+
+      // Keyboard navigation for options: focus highlight through arrow keys
+      optionsEl.addEventListener("keydown", e => {
+        const focusableOptions = Array.from(optionsEl.querySelectorAll("li"));
+        if (!focusableOptions.length) return;
+
+        let index = focusableOptions.findIndex(item => item === document.activeElement);
+
+        if (e.key === "ArrowDown") {
+          e.preventDefault();
+          let nextIndex = (index + 1) % focusableOptions.length;
+          focusableOptions[nextIndex].focus();
+        }
+        if (e.key === "ArrowUp") {
+          e.preventDefault();
+          let nextIndex = (index - 1 + focusableOptions.length) % focusableOptions.length;
+          focusableOptions[nextIndex].focus();
+        }
+      });
+    })();
+  </script>
+</body>
+
+</html>
