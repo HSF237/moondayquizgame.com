@@ -240,14 +240,30 @@
       user-select: text;
     }
 
-    .summary-message {
-      font-size: 1.25rem;
-      color: #ffe87f;
-      margin-bottom: 35px;
-      text-shadow: 0 0 8px #ecb800;
-      font-weight: 600;
-      min-height: 3rem;
-    }
+.summary-message {
+  font-size: 1.25rem;
+  color: #ffe87f; /* Bright yellow */
+  margin-top: 15px; /* Add margin at top for spacing */
+  margin-bottom: 25px; /* Keep bottom margin */
+  text-shadow: 0 0 8px #ecb800;
+  font-weight: 600;
+  min-height: 3rem;
+  /* Add ensure visibility */
+  z-index: 10;
+  position: relative;
+}
+    /* Also update the .question margin-bottom */
+.question {
+  font-size: 1.5rem;
+  margin-bottom: 30px; /* increase margin for spacing */
+  font-weight: 700;
+  color: #ffe87f;
+  text-shadow:
+    0 0 5px #f9d423,
+    0 0 10px #f9d423;
+  position: relative;
+  z-index: 10;
+}
 
     /* Decorative moon and stars */
     .stars {
